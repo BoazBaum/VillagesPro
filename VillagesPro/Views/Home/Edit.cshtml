@@ -1,0 +1,34 @@
+﻿@model VillagesPro.Models.VillagesList
+
+@{
+    ViewBag.Title = "Edit Village";
+}
+
+
+<div class=" mt-5 text-center">
+    <h2 class="m-2">עריכת יישוב</h2>
+
+    @using (Html.BeginForm("EditOrDeletion", "Home", FormMethod.Post))
+    {
+        @Html.Hidden("id", Model.id) // Pass hidden ID for edit or deletion
+
+<div class="form-group row d-inline-flex m-3" style="direction:rtl">
+    <div class="col">
+        @Html.TextBoxFor(model => model.VillageName, new { @class = "form-control" })
+    </div>
+    <div class="col-2 ms-1">
+        <button type="submit" name="action" value="save" class="btn btn-primary">שמירה</button>
+    </div>
+    <div class="col-2">
+        <button type="submit" name="action" value="delete" class="btn btn-danger">מחיקה</button>
+    </div>
+</div>
+
+
+    }
+
+    <div class="mt-2">
+        @Html.ActionLink("חזרה לרשימה", "Index")
+    </div>
+
+</div>

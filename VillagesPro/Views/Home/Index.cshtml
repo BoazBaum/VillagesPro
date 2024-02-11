@@ -1,0 +1,134 @@
+﻿@model IEnumerable<VillagesPro.Models.VillagesList>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<head>
+    @*<script type="text/javascript" src="https://www.google.com/jsapi"></script>*@
+    <script src="https://cdn.jsdelivr.net/npm/transliteration-indic-js"></script>
+
+    <title>Your Page Title</title>
+
+    <link rel="stylesheet" href="\Style\style.css">
+</head>
+
+<body>
+    <div class=" mt-5">
+        <h2 class="text-center">רשימת יישובים</h2>
+
+        <div class="text-center mt-3" style="direction:rtl">
+            <div class="d-inline-flex">
+                <form id="searchForm" action="@Url.Action("Index", "Home")" method="get">
+                    <div class="form-group row">
+                        <input id="searchQuery" type="text" name="searchQuery" class="form-control col h-50 m-auto" placeholder="חיפוש יישוב">
+                        <button type="submit" class="btn btn-primary m-2 col">חפש</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="sortOrder">מיון ישובים</label>
+                        <select id="sortOrder" name="sortOrder" class="form-control">
+                            <option value="asc" @(ViewBag.SortOrder == "asc" ? "selected" : "")>בסדר עולה</option>
+                            <option value="desc" @(ViewBag.SortOrder == "desc" ? "selected" : "")>בסדר יורד</option>
+                        </select>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+
+        <table class="table w-50 mx-auto mt-3" style="direction:rtl">
+            <tr class="" style="white-space: nowrap;">
+                <th>שם ישוב</th>
+                <th></th>
+            </tr>
+            @foreach (var village in Model)
+            {
+                <tr>
+
+                    <td class="col-12" style="white-space: nowrap;">@village.VillageName</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Home", new { id = village.id })" class="btn btn-info">ערוך</a>
+                    </td>
+                </tr>
+            }
+        </table>
+
+        <div class="row justify-content-center margin" style="direction: rtl">
+
+            <div class="col-auto  move-right">
+                @using (Html.BeginForm("Create", "Home", FormMethod.Get))
+                {
+                    <button type="submit" class="btn btn-primary">הוסף ישוב</button>
+                }
+            </div>
+
+            <div class="col-auto">
+
+                @if (ViewBag.Page > 1)
+                {
+                    <a href="@Url.Action("Index", "Home",
+                            new { page = ViewBag.Page - 1, sortOrder = ViewBag.SortOrder })" class="btn btn-dark">הקודם</a>
+                }
+                else
+                {
+                    <a href="#" class="btn btn-dark disabled" tabindex="-1" aria-disabled="true">הקודם</a>
+                }
+
+                @if (ViewBag.Page < ViewBag.TotalPages)
+                {
+                    <a href="@Url.Action("Index", "Home",
+                            new { page = ViewBag.Page + 1, sortOrder = ViewBag.SortOrder })" class="btn btn-dark">הבא</a>
+                }
+                else
+                {
+                    <a href="#" class="btn btn-dark disabled" tabindex="-1" aria-disabled="true">הבא</a>
+                }
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+    @*<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        // Load the Transliteration API from the "inputtools" package
+        google.load("inputtools", "1", {
+            packages: "transliteration"
+        });
+
+        function onLoad() {
+            var options = {
+                sourceLanguage: google.elements.transliteration.LanguageCode.ENGLISH,
+                destinationLanguage: [google.elements.transliteration.LanguageCode.HEBREW],
+                shortcutKey: 'ctrl+g',
+                transliterationEnabled: true
+            };
+
+        // Set the callback function for when the Transliteration API is loaded
+        google.setOnLoadCallback(onLoad);
+
+
+
+            var control = new google.elements.transliteration.TransliterationControl(options);
+            control.makeTransliteratable(['searchQuery']);
+        }
+    </script>*@
+</body>
+
+
+<script>
+    // make the submit functionality when click on the options in select tag
+    document.getElementById('sortOrder').addEventListener('change', function () {
+        document.getElementById('searchForm').submit();
+    });
+
+    // Set the selected attribute of the dropdown based on the query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const sortOrder = urlParams.get('sortOrder');
+    if (sortOrder) {
+        document.getElementById('sortOrder').value = sortOrder;
+    }
+</script>
